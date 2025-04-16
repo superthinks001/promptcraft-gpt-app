@@ -1,8 +1,8 @@
 import streamlit as st
 import openai
 
-# Insert your API key securely (use Streamlit secrets for deployment)
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Create a client using OpenAI v1 SDK
+client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.title("✨ PromptCraft - Your AI Prompt Assistant")
 
@@ -18,9 +18,9 @@ prompt = f"You are a {role}. Write a {tone} explanation of {topic} for {audience
 
 if st.button("Generate 🎯"):
     with st.spinner("Thinking..."):
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}]
         )
         st.markdown("### 💡 Result")
-        st.write(response['choices'][0]['message']['content'])
+        st.write(response.choices[0].message.content)
